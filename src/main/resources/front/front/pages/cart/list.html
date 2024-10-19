@@ -1,0 +1,414 @@
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <title>购物车</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../xznstatic/css/common.css"/>
+    <link rel="stylesheet" href="../../xznstatic/css/style.css"/>
+    <script type="text/javascript" src="../../xznstatic/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../xznstatic/js/jquery.SuperSlide.2.1.1.js"></script>
+
+    <link rel="stylesheet" href="../../css/theme.css"/>
+</head>
+<style>
+html::after {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        content: '';
+        display: block;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+    }
+
+    #swiper .layui-carousel-ind li {
+        width: 20px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, .3);
+        border-radius: 6px;
+        background-color: #f7f7f7;
+        box-shadow: 0 0 6px rgba(255, 0, 0, .8);
+    }
+
+    #swiper .layui-carousel-ind li.layui-this {
+        width: 30px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, .3);
+        border-radius: 6px;
+    }
+    /*轮播图相关 end*/
+
+    /*标题*/
+    .index-title {
+        text-align: center;
+        box-sizing: border-box;
+        width: 1200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .index-title span {
+        padding: 0 10px;
+        line-height: 1.4;
+    }
+
+    /* 把标签默认的间距设为0 */
+    body,ul,ol,p,h1,h2,h3,h4,h5,h6,dl,dd,select,input,textarea,form{margin:0;padding:0}
+
+    /* 让h标签文字大小继承body的文字设置 */
+    h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+
+    /* 去掉列表默认的图标 */
+    ul,ol{list-style:none;}
+
+    /* 去掉em默认的斜体 */
+    em{font-style: normal;}
+
+    /* 去掉a标签默认的下划线 */
+    a{text-decoration:none;}
+
+
+    /* 去掉加链接时产生的框线 */
+    img{border:0;}
+
+    /* 清除浮动 */
+    .clearfix:before,.clearfix:after{content:"";display:table}
+    .clearfix:after{clear:both;}
+    .clearfix{zoom:1}
+
+    /* 浮动 */
+    .fl{float:left}
+    .fr{float:right}
+    /*轮播图相关 start*/
+    #swiper {
+        overflow: hidden;
+    }
+
+
+    .cart_list_th{width:1198px;border:1px solid #ddd;background-color:#f7f7f7;margin:0 auto;}
+    .cart_list_th li{height:40px;line-height:40px;float:left;text-align:center;}
+    .cart_list_th .col01{width:26%;}
+    .cart_list_th .col02{width:16%;}
+    .cart_list_th .col03{width:16%;}
+    .cart_list_th .col04{width:13%;}
+    .cart_list_th .col05{width:18%;}
+    .cart_list_th .col06{width:18%;}
+
+    .cart_list_td{width:1198px;border:1px solid #ddd;background-color:#edfff9;margin:0 auto;margin-top:-1px;}
+    .cart_list_td li{height:120px;line-height:120px;float:left;text-align:center;}
+
+    .cart_list_td .col01{width:6%;}
+    .cart_list_td .col02{width:12%;}
+    .cart_list_td .col03{width:10%;}
+    .cart_list_td .col04{width:16%;}
+    .cart_list_td .col05{width:13%;}
+    .cart_list_td .col06{width:15%;}
+    .cart_list_td .col07{width:16%;}
+    .cart_list_td .col08{width:19%;}
+
+    .cart_list_td .col02 img{width:100px;height:100px;border:1px solid #ddd;display:block;margin:10px auto 0;}
+    .cart_list_td .col03{height:48px;text-align:left;line-height:24px;margin-top:38px;}
+    .cart_list_td .col03 em{color:#999}
+    .cart_list_td .col08 a{color:#666}
+
+    .cart_list_td .col06 .num_add{width:98px;height:28px;border:1px solid #ddd;margin:40px auto 0;}
+    .cart_list_td .col06 .num_add a{width:29px;height:28px;line-height:28px;background-color:#f3f3f3;font-size:14px;color:#666}
+    .cart_list_td .col06 .num_add input{width:38px;height:28px;text-align:center;line-height:30px;border:0px;display:block;float:left;outline:none;border-left:1px solid #ddd;border-right:1px solid #ddd;}
+
+
+    .settlements{width:1198px;height:78px;border:1px solid #ddd;background-color:#fff4e8;margin:-1px auto 0;}
+    .settlements li{line-height:78px;float:left;}
+    .settlements .col01{width:4%;text-align:center}
+    .settlements .col02{width:12%;}
+    .settlements .col03{width:82%; height:48px; line-height:28px;text-align:right;margin-top:10px;}
+    .settlements .col03 span{color:#ff0000;padding-right:5px}
+    .settlements .col03 em{color:#ff3d3d;font-size:22px;font-weight:bold;}
+    .settlements .col03 span{color:#ff0000;}
+    .settlements .col03 b{color:#ff0000;font-size:14px;padding:0 5px;}
+
+    .settlements .col04{width:14%;text-align:center;float:right;}
+    .settlements .col04 a{display:block;height:78px;background-color:#ff3d3d;text-align:center;line-height:78px;color:#fff;font-size:24px}
+</style>
+<body>
+<div id="app">
+    <div class="banner">
+        <div class="layui-carousel" id="swiper"
+             :style='{"boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"0 auto","borderColor":"rgba(0,0,0,.3)","borderRadius":"0px","borderWidth":"0","width":"100%","borderStyle":"solid"}'>
+            <div carousel-item>
+                <div v-for="(item,index) in swiperList" :key="index">
+                    <img style="width: 100%;height: 100%;object-fit:cover;" :src="item.img"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 标题 -->
+    <div class="index-title sub_backgroundColor" :style='{"padding":"10px","boxShadow":"0 0 0px rgba(255,0,0,.8)","margin":"20px auto","borderColor":"rgba(0,0,0,.3)","color":"#333","borderRadius":"0px","borderWidth":"0","fontSize":"25px","borderStyle":"solid","height":"auto"}'>
+        <span>SHOP / CART</span><span>购物车</span>
+    </div>
+    <!-- 标题 -->
+    <ul class="cart_list_th clearfix">
+        <li class="col01">名称</li>
+        <li class="col03">价格</li>
+        <li class="col04">数量</li>
+        <li class="col05">小计</li>
+        <li class="col06">操作</li>
+    </ul>
+
+    <ul class="cart_list_td clearfix" v-for="(item,index) in dataList" v-bind:key="index">
+        <li class="col01"></li>
+        <li class="col02"><img :src="item.shangpinPhoto"></li>
+        <li class="col03">{{item.shangpinName}}<br><em>{{item.shangpinNewMoney}} RMB</em></li>
+        <li class="col05">{{item.shangpinNewMoney}} RMB</li>
+        <li class="col06">
+            <div class="num_add">
+                <a @click="reduceCartNum(index)"  class="add fl">-</a>
+                <input type="text" class="num_show fl" :value="item.buyNumber" id="buyNumber" name="buyNumber">
+                <a @click="addCartNum(index)" class="minus fl">+</a>
+            </div>
+        </li>
+        <li class="col07">{{item.shangpinNewMoney*item.buyNumber}} RMB</li>
+        <li class="col08"><a @click="deleteCart(index)" ><i class="layui-icon">&#xe640;</i> 删除</a></li>
+    </ul>
+
+    <ul class="settlements">
+        <li class="col01"></li>
+        <li class="col03">合计：<span>¥</span><em>{{totalZongjiaMoney}}</em><br>共计<b>{{dataList.length}}</b>件商品</li>
+        <li class="col04"><a @click="buyClick" ><i class="layui-icon">&#xe657;</i>点击结算</a></li>
+    </ul>
+
+</div></div>
+
+<script src="../../layui/layui.js"></script>
+<script src="../../js/vue.js"></script>
+<!-- 引入element组件库 -->
+<script src="../../xznstatic/js/element.min.js"></script>
+<!-- 引入element样式 -->
+<link rel="stylesheet" href="../../xznstatic/css/element.min.css">
+<script src="../../js/config.js"></script>
+<script src="../../modules/config.js"></script>
+<script src="../../js/utils.js"></script>
+
+<script type="text/javascript">
+    var vue = new Vue({
+        el: '#app',
+    data: {
+        swiperList: [],
+
+
+
+                dataList: [],
+                thisTableType: -1,
+            },
+            filters: {
+                subString: function(val) {
+                    if (val) {
+                        val = val.replace(/<[^<>]+>/g, '').replace(/undefined/g, '');
+                        if (val.length > 60) {
+                            val = val.substring(0, 60);
+                            val+='...';
+                        }
+                        return val;
+                    }
+                    return '';
+                }
+            },
+            computed: {
+                totalZongjiaMoney: function() {
+                    var total = 0;
+                    for (var item of this.dataList) {
+                        total += item.shangpinNewMoney * item.buyNumber
+                    }
+                    return total;
+                }
+            },
+            methods: {
+                isAuth(tablename, button) {
+                    return isFrontAuth(tablename, button);
+                }
+                ,jump(url) {
+                    jump(url);
+                }
+                ,jumpCheck(url,check1,check2) {
+                    if(check1 == "2" || check1 == 2){//级联表的逻辑删除字段[1:未删除 2:已删除]
+                        layui.layer.msg("已经被删除", {
+                            time: 2000,
+                            icon: 2
+                        });
+                        return false;
+                    }
+                    if(check2 == "2"  || check2 == 2){//是否下架[1:上架 2:下架]
+                        layui.layer.msg("已经下架", {
+                            time: 2000,
+                            icon: 2
+                        });
+                        return false;
+                    }
+                    this.jump(url);
+                }
+			// 添加数量
+			,addCartNum(index) {
+				// 查询对应的商品的详情信息，判断是否有商品限次，库存的判断
+				var item = this.dataList[index];
+				layui.http.request(`shangpin/info/${item.shangpinId}`, 'get', {}, function(res) {
+					// 库存限制
+					if (res.data.shangpinKucunNumber && res.data.shangpinKucunNumber > 0 && res.data.shangpinKucunNumber <= item.buyNumber) {
+						layui.layer.msg(`商品信息库存不足`, {
+							time: 2000,
+							icon: 5
+						});
+						return
+					}
+					item.buyNumber = item.buyNumber + 1;
+					layui.http.requestJson(`cart/update`, 'post', item, function(res) {});
+				});
+			}
+			// 减少数量
+			,reduceCartNum(index) {
+				var item = this.dataList[index];
+				if (item.buyNumber > 1) {
+					item.buyNumber = item.buyNumber - 1;
+					layui.http.requestJson(`cart/update`, 'post', item, function(res) {});
+				}
+			}
+			// 删除
+			,deleteCart(index) {
+				var item = this.dataList[index];
+				layui.http.requestJson(`cart/delete`, 'post', [item.id], function(res) {
+					window.location.reload();
+				});
+			}
+			// 购买
+			,buyClick() {
+			 	if(this.dataList.length<=0){
+                        layui.layer.msg(`您的购物车为空，快去将自己喜欢的商品放入购物车吧！`, {
+                        time: 2000,
+                        icon: 5
+                    });
+                    return false;
+                }
+				localStorage.setItem('shangpins', JSON.stringify(this.dataList));
+				window.location.href = '../shangpinOrder/confirm.html'
+			}            }
+        });
+
+        layui.use(['layer', 'element', 'carousel', 'laypage', 'http', 'jquery', 'laydate', 'tinymce'], function() {
+            var layer = layui.layer;
+            var element = layui.element;
+            var carousel = layui.carousel;
+            var laypage = layui.laypage;
+            var http = layui.http;
+            var laydate = layui.laydate;
+            var tinymce = layui.tinymce;
+            window.jQuery = window.$ = jquery = layui.jquery;
+
+            var limit = 8;
+
+            // 获取轮播图 数据
+            http.request('config/list', 'get', {
+                page: 1,
+                limit: 5
+            }, function (res) {
+                if (res.data.list.length > 0) {
+                    let swiperList = [];
+                    res.data.list.forEach(element => {
+                        if(element.value != null){
+                            swiperList.push({
+                                img: element.value
+                            });
+                        }
+                    });
+                    vue.swiperList = swiperList;
+
+                    vue.$nextTick(() => {
+                        carousel.render({
+                            elem: '#swiper',
+                            width: '100%',
+                            height: '450px',
+                            arrow: 'hover',
+                            anim: 'default',
+                            autoplay: 'true',
+                            interval: '3000',
+                            indicator: 'inside'
+                        });
+                    });
+                }
+            });
+
+
+
+
+        // 获取列表数据
+        http.request('cart/page', 'get', {
+            page: 1,
+            limit: limit,
+            yonghuId: localStorage.getItem('userid')
+        }, function(res) {
+            vue.dataList = res.data.list
+            // 分页
+            laypage.render({
+                elem: 'pager',
+                count: res.data.total,
+                limit: limit,
+                jump: function(obj, first) {
+                    //首次不执行
+                    if (!first) {
+                        http.request('news/list', 'get', {
+                            page: obj.curr,
+                            limit: obj.limit,
+                            yonghuId: localStorage.getItem('userid')
+                        }, function(res) {
+                            vue.dataList = res.data.list
+                        })
+                    }
+                }
+            });
+        })        });
+
+        window.xznSlide = function () {
+            jQuery(".banner").slide({mainCell: ".bd ul", autoPlay: true, interTime: 5000});
+            jQuery("#ifocus").slide({
+                titCell: "#ifocus_btn li",
+                mainCell: "#ifocus_piclist ul",
+                effect: "leftLoop",
+                delayTime: 200,
+                autoPlay: true,
+                triggerTime: 0
+            });
+            jQuery("#ifocus").slide({titCell: "#ifocus_btn li", mainCell: "#ifocus_tx ul", delayTime: 0, autoPlay: true});
+            jQuery(".product_list").slide({
+                mainCell: ".bd ul",
+                autoPage: true,
+                effect: "leftLoop",
+                autoPlay: true,
+                vis: 5,
+                trigger: "click",
+                interTime: 4000
+            });
+        };
+    </script>
+</body>
+</html>

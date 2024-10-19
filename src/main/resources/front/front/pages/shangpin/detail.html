@@ -1,0 +1,438 @@
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>商品信息详情页</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <!-- 样式 -->
+    <link rel="stylesheet" href="../../css/style.css"/>
+    <!-- 主题（主要颜色设置） -->
+    <link rel="stylesheet" href="../../css/theme.css"/>
+    <!-- 通用的css -->
+    <link rel="stylesheet" href="../../css/common.css"/>
+    <link rel="stylesheet" href="../../xznstatic/css/bootstrap.min.css">
+</head>
+<style>
+    html::after {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        content: '';
+        display: block;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+        z-index: -1;
+    }
+
+    #swiper {
+        overflow: hidden;
+    }
+
+    #swiper .layui-carousel-ind li {
+        width: 16px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, .3);
+        border-radius: 3px;
+        background-color: #f7f7f7;
+        box-shadow: 0 0 6px rgba(255, 0, 0, .8);
+    }
+
+    #swiper .layui-carousel-ind li.layui-this {
+        width: 26px;
+        height: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, .3);
+        border-radius: 6px;
+        box-shadow: 0 0 6px rgba(255, 0, 0, .8);
+    }
+
+    input#buynumber::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    input#buynumber[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    .message-container {
+        width: 100%
+    }
+
+    .data-detail {
+        padding-bottom: 20px;
+    }
+
+    .data-detail .layui-breadcrumb a.first {
+        color: rgba(14, 14, 14, 1) !important;
+    }</style>
+<body>
+
+    <div id="app">
+        <div class="data-detail">
+            <div class="sub_backgroundColor data-detail-breadcrumb" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"20px auto","borderColor":"rgba(135, 206, 250, 1)","borderRadius":"4px","borderWidth":"0","borderStyle":"solid","height":"54px"}'>
+                <span class="layui-breadcrumb">
+                    <a class="first" :style='{"padding":"8px 10px","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"0 5px","borderColor":"rgba(255,0,0,.3)","backgroundColor":"rgba(255, 255, 255, 0)","color":"rgba(14, 14, 14, 1)","borderRadius":"0","borderWidth":"0","fontSize":"16px","borderStyle":"solid"}' href="../home/home.html">
+                        首页
+                    </a>
+                    <a>
+                        <cite :style='{"padding":"8px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0 15px","borderColor":"rgba(255,0,0,.3)","backgroundColor":"rgba(255, 255, 255, 0)","color":"rgba(129, 84, 118, 1)","borderRadius":"4px","borderWidth":"0","fontSize":"16px","borderStyle":"solid"}'>
+                            {{title}}
+                        </cite>
+                    </a>
+                </span>
+                        <a v-if='storeupFlag' class="main_backgroundColor" :style='{"padding":"0 12px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(255,0,0,.3)","color":"rgba(255, 255, 255, 1)","borderRadius":"4px","borderWidth":"0","fontSize":"16px","lineHeight":"34px","borderStyle":"solid"}' @click="addShangpinCollection()" href="javascript:void(0)">
+                    <i class="layui-icon" style="font-size: 20px;color: red;" v-if='true' :style='{"color":"rgba(255, 255, 255, 1)","padding":"0 2px 0 0","fontSize":"18px"}'>&#xe67a;</i>取消收藏
+                </a>
+                <a v-if='!storeupFlag' class="main_backgroundColor" :style='{"padding":"0 12px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(255,0,0,.3)","color":"rgba(255, 255, 255, 1)","borderRadius":"4px","borderWidth":"0","fontSize":"16px","lineHeight":"34px","borderStyle":"solid"}' @click="addShangpinCollection()" href="javascript:void(0)">
+                    <i class="layui-icon" style="font-size: 20px;color: red;" v-if='true' :style='{"color":"rgba(255, 255, 255, 1)","padding":"0 2px 0 0","fontSize":"18px"}'>&#xe67b;</i>点我收藏
+                </a>
+            </div>
+            <div class="layui-row" style="display: flex">
+                <div class="layui-col-md5" style="width:420px">
+                    <div class="layui-carousel " id="swiper" :style='{"boxShadow":"0 0 2px rgba(160, 67, 26, 1)","margin":"0 auto","borderColor":"rgba(0,0,0,.3)","borderRadius":"6px","borderWidth":"0","width":"420px","borderStyle":"solid","height":"400px"}'>
+                        <div carousel-item>
+                            <div v-if="swiperList.length" v-for="(item,index) in swiperList" :key="index">
+                                <img style="width: 100%;height: 100%;object-fit:cover;" :src="item"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-col-md7 sub_borderColor" style="padding-left: 20px;flex: 1;" :style='{"padding":"0","boxShadow":"0 0 0px rgba(255,0,0,0)","margin":"0 0 0 20px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"1px","borderStyle":"solid"}'>
+                <h1 style="position: relative;" :style='{"padding":"10px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(160, 67, 26, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"0","textAlign":"center","borderWidth":"0px","fontSize":"18px","borderStyle":"solid"}' class="title">
+                    {{title}}
+                </h1>
+                    <div class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            商品类型：
+                        </span>
+                        <span class="desc" style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' >
+                            {{detail.shangpinValue}}
+                        </span>
+                    </div>
+                    <div v-if="detail.shangpinKucunNumber" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            商品库存：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.shangpinKucunNumber}}
+                        </span>
+                    </div>
+                    <div v-if="detail.shangpinOldMoney" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            商品原价：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.shangpinOldMoney}}
+                        </span>
+                    </div>
+                    <div v-if="detail.shangpinNewMoney" class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            商品现价：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","color":"#333","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{detail.shangpinNewMoney}}
+                        </span>
+                    </div>
+                    <div class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <span :style='{"padding":"0 12px 0 0","minWidth":"110px","fontSize":"14px","color":"#333","textAlign":"left"}'>
+                            所属商家：
+                        </span>
+                        <span style="word-break: break-all" :style='{"padding":"5px 15px","boxShadow":"0 0 0px rgba(255,0,0,.3)","borderColor":"rgba(135, 206, 250, 1)","backgroundColor":"#fff","borderRadius":"4px","textAlign":"left","borderWidth":"0","width":"auto","lineHeight":"24px","fontSize":"14px","borderStyle":"solid"}' class="desc">
+                            {{ detail.shangjiaName }}
+                        </span>
+                    </div>
+                    <div class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <button style="height:auto;" :style='{"padding":"0","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(244, 121, 131, 1)","color":"#666","borderRadius":"4px 0 0 4px","borderWidth":"1px","width":"34px","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}' type="button" @click="buyNumber>0?buyNumber--:buyNumber" class="layui-btn layui-btn-primary">
+                            -
+                        </button>
+                        <input style="text-align:center;padding:10px 20px;width:300px;" :style='{"padding":"0","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(255, 242, 223, 1)","color":"rgba(255, 45, 81, 1)","borderRadius":"0","borderWidth":"1px 0","width":"44px","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}' type="number" v-model="buyNumber" id="buyNumber" name="buyNumber" class="layui-input" disabled="disabled" />
+                        <button style="height:auto;" :style='{"padding":"0","boxShadow":"0 0 6px rgba(255,0,0,0)","margin":"0","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(68, 206, 246, 1)","color":"#666","borderRadius":"0 4px 4px 0","borderWidth":"1px","width":"34px","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}' type="button" @click="buyNumber++" class="layui-btn layui-btn-primary">
+                            +
+                        </button>
+                        <button @click="addShangpinCart()" style="height:auto;" :style='{"padding":"0 10px","boxShadow":"0 0 6px rgba(255,0,0,.3)","margin":"0 5px","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(244, 121, 131, 1)","color":"rgba(240, 252, 255, 1)","borderRadius":"6px","borderWidth":"0","width":"auto","lineHeight":"40px","fontSize":"16px","borderStyle":"solid"}' type="button" class="layui-btn layui-btn-warm">
+                            添加到购物车
+                        </button>
+                        <button @click="addShangpinOrder()" style="height:auto;" :style='{"padding":"0 10px","boxShadow":"0 0 0px rgba(255,0,0,.3)","margin":"0 5px","borderColor":"rgba(0,0,0,.3)","backgroundColor":"rgba(23, 124, 176, 1)","color":"rgba(255, 255, 255, 1)","borderRadius":"6px","borderWidth":"0","width":"auto","lineHeight":"40px","fontSize":"16px","borderStyle":"solid"}' type="button" class="layui-btn btn-submit">
+                            立即购买
+                        </button>
+                    </div>
+                   <!-- <div class="detail-item main_borderColor" :style='{"padding":"6px 15px","backgroundColor":"#fff","borderRadius":"0","borderWidth":"0 0 1px 0","borderStyle":"solid"}'>
+                        <button :style='{"margin":"0 5px","borderColor":"rgba(0,0,0,.3)","color":"rgba(255, 255, 255, 1)","borderRadius":"4px","borderWidth":"0","width":"auto","lineHeight":"34px","fontSize":"14px","borderStyle":"solid"}'
+                                @click="onAcrossTap('dingdan')" type="button" class="layui-btn sub_backgroundColor sub_borderColor">
+                            预定
+                        </button>
+                    </div>-->
+                </div>
+            </div>
+
+                
+            <div class="layui-row detail-tab">
+                <div class="layui-tab layui-tab-card main_borderColor" :style='{"backgroundColor":"#fff","borderRadius":"10px","borderStyle":"solid","borderWidth":"1px"}' style="overflow: hidden;">
+                    <ul class="layui-tab-title main_color" :style='{"backgroundColor":"#f2f2f2","fontSize":"14px"}'>
+                        <li class="layui-this">详情</li>
+                    </ul>
+
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <div v-html="myFilters(detail.shangpinContent)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    </div>
+
+
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/vue.js"></script>
+    <!-- 引入element组件库 -->
+    <script src="../../xznstatic/js/element.min.js"></script>
+    <!-- 引入element样式 -->
+    <link rel="stylesheet" href="../../xznstatic/css/element.min.css">
+    <!-- 组件配置信息 -->
+    <script src="../../js/config.js"></script>
+    <!-- 扩展插件配置信息 -->
+    <script src="../../modules/config.js"></script>
+    <!-- 工具方法 -->
+    <script src="../../js/utils.js"></script>
+
+    <script>
+        Vue.prototype.myFilters= function (msg) {
+            if(msg != null){
+                return msg.replace(/\n/g, "<br>");
+            }else{
+                return "";
+            }
+        };
+        var vue = new Vue({
+            el: '#app',
+            data: {
+                // 轮播图
+                swiperList: [],
+                // 数据详情
+                detail: {
+                    id: 0
+                },
+                // 商品标题
+                title: '',
+
+                storeupFlag: 0,//收藏 [0为收藏 1已收藏]
+                //系统推荐
+                shangpinRecommendList: [],
+    <!-- 是订单并且非座位才有购物车 -->
+                // 加入购物车数量
+                buyNumber: 1,
+                // 当前详情页表
+                detailTable: 'shangpin',
+            },
+            methods: {
+                jump(url) {
+                    jump(url)
+                },
+                isAuth(tablename, button) {
+                    return isFrontAuth(tablename, button)
+                },
+                // 收藏商品
+                addShangpinCollection() {
+                    let _this = this;
+                    layui.http.request('shangpinCollection/list', 'get', {
+                        page: 1,
+                        limit: 1,
+                        shangpinId: _this.detail.id,
+                        shangpinCollectionTypes: 1,
+                        yonghuId: localStorage.getItem('userid'),
+                    }, (res) => {
+                        if (res.data.list.length == 1) {
+                            layui.http.requestJson('shangpinCollection/delete', 'post', [res.data.list[0].id], function (res) {
+                                layui.layer.msg('取消成功', {
+                                    time: 1000,
+                                    icon: 5
+                                }, function () {
+                                    window.location.reload();
+                                });
+                            });
+                            return false;
+                        }
+                        layui.http.requestJson('shangpinCollection/add', 'post', {
+                            yonghuId: localStorage.getItem('userid'),
+                            shangpinId: _this.detail.id,
+                            shangpinCollectionTypes: 1,
+                        }, function (res) {
+                            layui.layer.msg('收藏成功', {
+                                time: 1000,
+                                icon: 6
+                            }, function () {
+                                window.location.reload();
+                            });
+                        });
+                    });
+                },
+                // 添加到购物车
+                addShangpinCart(){
+                    // 库存限制
+                    if (this.detail.shangpinKucunNumber > 0 && this.detail.shangpinKucunNumber < this.buyNumber) {
+                        layui.layer.msg(`库存不足`, {
+                            time: 2000,
+                            icon: 5
+                        });
+                        return false;
+                    }
+                    // 查询是否已经添加到购物车
+                    layui.http.request('cart/list', 'get', {
+                        yonghuId: localStorage.getItem('userid'),
+                        shangpinId : this.detail.id,
+                    }, (res) => {
+                        if(res.data.list.length > 0){
+                            layui.layer.msg("该商品信息已经添加到购物车", {
+                                time: 2000,
+                                icon: 5
+                            });
+                            return false;
+                        }
+                        layui.http.requestJson('cart/add', 'post', {
+                            yonghuId : localStorage.getItem('userid'),
+                            shangpinId : this.detail.id,
+                            buyNumber: this.buyNumber,
+                        }, (res) => {
+                            if(res.code==0){
+                                layui.layer.msg('添加到购物车成功', {
+                                    time: 2000,
+                                    icon: 6
+                                });
+                            }else{
+                                layui.layer.msg(res.msg, {
+                                    time: 2000,
+                                    icon: 2
+                                });
+                            }
+                        });
+                    });
+                },
+                // 立即购买
+                addShangpinOrder() {
+                    // 库存限制
+                    if (this.detail.shangpinKucunNumber > 0 && this.detail.shangpinKucunNumber < this.buyNumber) {
+                        layui.layer.msg(`商品信息库存不足`, {
+                            time: 2000,
+                            icon: 5
+                        });
+                        return false;
+                    }
+                    // 保存到storage中，在确认下单页面中获取要购买的商品
+                    localStorage.setItem('shangpins', JSON.stringify([{
+                        shangpinId: vue.detail.id,
+                        shangjiaId: vue.detail.shangjiaId,
+                        shangpinName: vue.detail.shangpinName,
+                        shangpinTypes: vue.detail.shangpinTypes,
+                        shangpinPhoto: vue.detail.shangpinPhoto,
+                        shangpinKucunNumber: vue.detail.shangpinKucunNumber,
+                        shangpinOldMoney: vue.detail.shangpinOldMoney,
+                        shangpinNewMoney: vue.detail.shangpinNewMoney,
+                        shangxiaTypes: vue.detail.shangxiaTypes,
+                        shangpinDelete: vue.detail.shangpinDelete,
+                        shangpinContent: vue.detail.shangpinContent,
+                        createTime: vue.detail.createTime,
+                        buyNumber: this.buyNumber,
+                        yonghuId: localStorage.getItem('userid'),
+                    }]));
+                    // 跳转到确认下单页面
+                    jump('../shangpinOrder/confirm.html');
+                },
+
+                }
+        });
+
+        layui.use(['layer', 'form', 'element', 'carousel', 'http', 'jquery', 'laypage', 'util'], function () {
+            var layer = layui.layer;
+            var util = layui.util;
+            var element = layui.element;
+            var form = layui.form;
+            var carousel = layui.carousel;
+            var http = layui.http;
+            var jquery = layui.jquery;
+            var laypage = layui.laypage;
+
+            var limit = 10;
+
+            // 数据ID
+            var id = http.getParam('id');
+            vue.detail.id = id;
+            // 数据信息
+            http.request(`${vue.detailTable}/detail/` + id, 'get', {}, function (res) {
+                // 详情信息
+                vue.detail = res.data;
+                vue.title = vue.detail.shangpinName;
+                // 轮播图片
+                vue.swiperList = vue.detail.shangpinPhoto ? vue.detail.shangpinPhoto.split(",") : [];
+                // 轮播图
+                vue.$nextTick(() => {
+                    carousel.render({
+                        elem: '#swiper',
+                        width: '420px',
+                        height: '400px',
+                        arrow: 'hover',
+                        anim: 'default',
+                        autoplay: 'true',
+                        interval: '3000',
+                        indicator: 'inside'
+                    });
+                });
+
+            });
+
+
+            // 系统推荐
+            http.request(`shangpin/list`, 'get', {
+                page: 1,
+                limit: 5,
+                shangpinTypes: vue.detail.shangpinTypes,
+                shangpinDelete: 1,
+                shangxiaTypes: vue.detail.shangxiaTypes,
+            }, function (res) {
+                vue.shangpinRecommendList = res.data.list;
+            });
+
+            if (localStorage.getItem('userid')) {
+                http.request('shangpinCollection/list', 'get', {
+                    page: 1,
+                    limit: 1,
+                    shangpinId: vue.detail.id,
+                    yonghuId: localStorage.getItem('userid'),
+                }, function (res) {
+                    if(res.data.total >0){
+                        res.data.list.forEach(element => {
+                            if (element.shangpinCollectionTypes == 1) {
+                                vue.storeupFlag = 1;
+                            }
+                            if (element.shangpinCollectionTypes == 2) {
+                                vue.zanFlag = 1;
+                            }
+                            if (element.shangpinCollectionTypes == 3) {
+                                vue.caiFlag = 1;
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
